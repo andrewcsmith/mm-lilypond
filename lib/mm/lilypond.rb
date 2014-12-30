@@ -1,10 +1,14 @@
 require 'mm'
+require 'erb'
 
 class MM::Lilypond
   VERSION = "1.0.0"
 
+  attr_accessor :offset, :basenames
+
   def initialize
-    @basenames = ["d", "a", "e", "b", "fsharp", "csharp", "gsharp", "dsharp", "asharp", "esharp", "bsharp", "fflat", "cflat", "gflat", "dflat", "aflat", "eflat", "bflat", "f", "c", "g"] 
+    @offset = 2 
+    @basenames = ["c", "g", "d", "a", "e", "b", "fsharp", "csharp", "gsharp", "dsharp", "asharp", "esharp", "bsharp", "fdoublesharp", "cdoublesharp", "gdoublesharp", "ddoublesharp", "adoublesharp", "edoublesharp", "bdoublesharp", "bdoubleflat", "edoubleflat", "adoubleflat", "ddoubleflat", "gdoubleflat", "cdoubleflat", "fdoubleflat", "fflat", "cflat", "gflat", "dflat", "aflat", "eflat", "bflat", "f"]
   end
 
   def get_pitch ratio
@@ -15,7 +19,7 @@ class MM::Lilypond
   end
 
   def get_basename ratio
-    @basenames[get_steps ratio].dup
+    @basenames[@offset + get_steps(ratio)].dup
   end
 
   def get_alteration ratio
@@ -63,6 +67,14 @@ class MM::Lilypond
 
   def full_note ratio
     get_pitch(ratio) + get_duration(ratio)
+  end
+
+  attr_writer :template
+
+  def render ratios
+    my_music = ratios.map {|r| self.full_note r}.join(" ")
+    output = ERB.new @template
+    output.result(binding)
   end
 
   private

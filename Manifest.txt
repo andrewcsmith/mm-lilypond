@@ -5,3 +5,4 @@ README.txt
 Rakefile
 lib/mm/lilypond.rb
 test/mm/test_lilypond.rb
+test/test_template.ly.erb

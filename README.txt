@@ -1,6 +1,7 @@
 = mm-lilypond
 
-* FIX (url)
+* http://www.lilypond.org
+* http://www.andrewchristophersmith.com
 
 == DESCRIPTION:
 
