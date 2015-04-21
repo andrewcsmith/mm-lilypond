@@ -56,5 +56,13 @@ class TestMM::TestLilypond < Minitest::Test
     assert_equal "c", @lily_parser.get_pitch(MM::Ratio.new(1,1))
     assert_equal "eDf", @lily_parser.get_pitch(MM::Ratio.new(5,4))
   end
+
+  def test_prime_limit
+    @lily_parser.prime_limit = 3
+    @lily_parser.prime_steps[3] = 6
+    assert_equal "bflat", @lily_parser.get_pitch(MM::Ratio.new(14, 9))
+    assert_equal "fsharp", @lily_parser.get_pitch(MM::Ratio.new(5, 4))
+    assert_equal "gsharp", @lily_parser.get_pitch(MM::Ratio.new(11, 8))
+  end
 end
 

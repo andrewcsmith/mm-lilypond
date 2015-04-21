@@ -4,11 +4,17 @@ require 'erb'
 class MM::Lilypond
   VERSION = "1.0.0"
 
-  attr_accessor :offset, :basenames
+  attr_accessor :offset, :basenames, :prime_limit, :prime_steps
 
-  def initialize
+  def initialize prime_limit: nil
     @offset = 2 
-    @basenames = ["c", "g", "d", "a", "e", "b", "fsharp", "csharp", "gsharp", "dsharp", "asharp", "esharp", "bsharp", "fdoublesharp", "cdoublesharp", "gdoublesharp", "ddoublesharp", "adoublesharp", "edoublesharp", "bdoublesharp", "bdoubleflat", "edoubleflat", "adoubleflat", "ddoubleflat", "gdoubleflat", "cdoubleflat", "fdoubleflat", "fflat", "cflat", "gflat", "dflat", "aflat", "eflat", "bflat", "f"]
+    @basenames = ["c", "g", "d", "a", "e", "b", 
+                  "fsharp", "csharp", "gsharp", "dsharp", "asharp", "esharp", "bsharp", 
+                  "fdoublesharp", "cdoublesharp", "gdoublesharp", "ddoublesharp", "adoublesharp", "edoublesharp", "bdoublesharp", 
+                  "fdoubleflat", "cdoubleflat", "gdoubleflat", "ddoubleflat", "adoubleflat", "edoubleflat", "bdoubleflat",
+                  "fflat", "cflat", "gflat", "dflat", "aflat", "eflat", "bflat", "f"]
+    @prime_limit = prime_limit
+    @prime_steps = [1, 4, -2, -1, 3]
   end
 
   def get_pitch ratio
@@ -23,14 +29,14 @@ class MM::Lilypond
   end
 
   def get_alteration ratio
-    ratio.factors.map {|f|
+    ratio.factors.reject {|f| @prime_limit && f[0] > @prime_limit}.map {|f|
       case f[0]
       when 5
         collect_string f[1], "f"
       when 7
         collect_string f[1], "s"
       when 11
-        collect_string f[1], "e"
+        collect_string f[1] * -1, "e"
       when 13
         collect_string f[1], "t"
       end
@@ -50,6 +56,8 @@ class MM::Lilypond
         f[1] * 20
       when 11
         f[1] * 24
+      when 13
+        f[1] * 26
       else
         0
       end
@@ -91,13 +99,15 @@ class MM::Lilypond
     ratio.factors.inject(0) {|memo, f|
       memo + case f[0]
       when 3
-        f[1]
+        f[1] * @prime_steps[0]
       when 5
-        f[1] * 4
+        f[1] * @prime_steps[1]
       when 7
-        f[1] * -2
+        f[1] * @prime_steps[2]
       when 11
-        f[1] * -1
+        f[1] * @prime_steps[3]
+      when 13
+        f[1] * @prime_steps[4]
       else
         0
       end
