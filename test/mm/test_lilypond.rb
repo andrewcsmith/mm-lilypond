@@ -27,14 +27,15 @@ class TestMM::TestLilypond < Minitest::Test
   def test_get_octave
     assert_equal ",,", @lily_parser.get_octave(MM::Ratio.new(1,4))
     assert_equal "'", @lily_parser.get_octave(MM::Ratio.new(9,4))
-    assert_equal "", @lily_parser.get_octave(MM::Ratio.new(7,4))
+    assert_equal "'", @lily_parser.get_octave(MM::Ratio.new(7,4))
   end
 
   def test_get_pitch
+    assert_equal "d", @lily_parser.get_pitch(MM::Ratio.new(1,1))
     assert_equal "a", @lily_parser.get_pitch(MM::Ratio.new(3,2))
     assert_equal "fsharpDf", @lily_parser.get_pitch(MM::Ratio.new(5,4))
-    assert_equal "cDs", @lily_parser.get_pitch(MM::Ratio.new(7,4))
-    assert_equal "cDs,", @lily_parser.get_pitch(MM::Ratio.new(7,8))
+    assert_equal "cDs'", @lily_parser.get_pitch(MM::Ratio.new(7,4))
+    assert_equal "cDs", @lily_parser.get_pitch(MM::Ratio.new(7,8))
     assert_equal "d'", @lily_parser.get_pitch(MM::Ratio.new(2,1))
     assert_equal "d,", @lily_parser.get_pitch(MM::Ratio.new(1,2))
   end
@@ -46,7 +47,7 @@ class TestMM::TestLilypond < Minitest::Test
 
   def test_render
     @lily_parser.template = File.read("test/test_template.ly.erb")
-    exp = "music = { a1*2/3 cDs1*4/7 }\n"
+    exp = "music = { a1*2/3 cDs'1*4/7 }\n"
     result = @lily_parser.render([MM::Ratio.new(3,2), MM::Ratio.new(7,4)])
     assert_equal exp, result
   end
@@ -55,6 +56,7 @@ class TestMM::TestLilypond < Minitest::Test
     @lily_parser.offset = 0
     assert_equal "c", @lily_parser.get_pitch(MM::Ratio.new(1,1))
     assert_equal "eDf", @lily_parser.get_pitch(MM::Ratio.new(5,4))
+    assert_equal "bDf", @lily_parser.get_pitch(MM::Ratio.new(15,8))
   end
 
   def test_prime_limit

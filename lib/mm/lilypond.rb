@@ -1,12 +1,14 @@
 require 'mm'
+require 'pry'
 require 'erb'
 
 class MM::Lilypond
-  VERSION = "1.0.0"
+  VERSION = "1.1.0"
 
   attr_accessor :offset, :basenames, :prime_limit, :prime_steps
 
   def initialize prime_limit: nil
+    # offset is around the circle of fifths
     @offset = 2 
     @basenames = ["c", "g", "d", "a", "e", "b", 
                   "fsharp", "csharp", "gsharp", "dsharp", "asharp", "esharp", "bsharp", 
@@ -44,6 +46,7 @@ class MM::Lilypond
   end
 
   def get_octave ratio
+    offset = (@offset * 4) % 7
     degrees = ratio.factors.inject(0) {|d, f|
       d + case f[0]
       when 2
@@ -51,7 +54,7 @@ class MM::Lilypond
       when 3
         f[1] * 11
       when 5
-        f[1] * 17
+        f[1] * 16
       when 7
         f[1] * 20
       when 11
@@ -61,7 +64,7 @@ class MM::Lilypond
       else
         0
       end
-    }
+    } + offset
     if degrees > 0
       (degrees / 7.0).floor.times.map {"'"}.join("")
     else
