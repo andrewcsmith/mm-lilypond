@@ -2,7 +2,7 @@ require 'mm'
 require 'erb'
 
 class MM::Lilypond
-  VERSION = "1.2.0"
+  VERSION = "1.2.1"
 
   attr_accessor :offset, :basenames, :prime_limit, :prime_steps
   attr_writer :template
@@ -81,6 +81,12 @@ class MM::Lilypond
   def cents_deviation ratio
     unaltered = cents_of_unaltered ratio
     deviation = (ratio.cents % 1200) - unaltered
+
+    # Account for extreme displacements, such as cDs
+    if unaltered == 0.0 && deviation > 600.0
+      deviation -= 1200.0
+    end
+
     if deviation < 0
       "#{deviation.round}"
     else

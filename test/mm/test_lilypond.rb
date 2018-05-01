@@ -48,6 +48,7 @@ class TestMM::TestLilypond < Minitest::Test
   def test_cents_deviation
     assert_equal "+2", @lily_parser.cents_deviation(MM::Ratio.new(3, 2))
     assert_equal "-14", @lily_parser.cents_deviation(MM::Ratio.new(5, 4))
+    assert_equal "-27", @lily_parser.cents_deviation(MM::Ratio.new(63, 32))
   end
 
   def test_cents_of_unaltered
