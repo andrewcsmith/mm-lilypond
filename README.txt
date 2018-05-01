@@ -1,6 +1,5 @@
 = mm-lilypond
 
-* http://www.lilypond.org
 * http://www.andrewchristophersmith.com
 
 == DESCRIPTION:

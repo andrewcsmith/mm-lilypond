@@ -6,6 +6,7 @@ class MM::Lilypond
   VERSION = "1.1.0"
 
   attr_accessor :offset, :basenames, :prime_limit, :prime_steps
+  attr_writer :template
 
   def initialize prime_limit: nil
     # offset is around the circle of fifths
@@ -79,8 +80,6 @@ class MM::Lilypond
   def full_note ratio
     get_pitch(ratio) + get_duration(ratio)
   end
-
-  attr_writer :template
 
   def render ratios
     my_music = ratios.map {|r| self.full_note r}.join(" ")
