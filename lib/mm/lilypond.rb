@@ -2,7 +2,7 @@ require 'mm'
 require 'erb'
 
 class MM::Lilypond
-  VERSION = "1.1.0"
+  VERSION = "1.2.0"
 
   attr_accessor :offset, :basenames, :prime_limit, :prime_steps
   attr_writer :template
