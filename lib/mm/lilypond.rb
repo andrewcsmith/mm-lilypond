@@ -77,6 +77,22 @@ class MM::Lilypond
     "1*#{ratio.reciprocal.to_s}"
   end
 
+  # Gets the cents deviation from the unaltered pitch (i.e., from the equal
+  # tempered pitch of sharps, flats, naturals).
+  def cents_deviation ratio
+    unaltered = cents_of_unaltered ratio
+    deviation = (ratio.cents % 1200) - unaltered
+    if deviation < 0
+      "#{deviation.round}"
+    else
+      "+#{deviation.round}"
+    end
+  end
+
+  def cents_of_unaltered ratio
+    (get_steps(ratio) * 7) % 12 * 100.0
+  end
+
   def full_note ratio
     get_pitch(ratio) + get_duration(ratio)
   end

@@ -45,6 +45,16 @@ class TestMM::TestLilypond < Minitest::Test
     assert_equal "aflatUfDs1*5/7", @lily_parser.full_note(MM::Ratio.new(7,5))
   end
 
+  def test_cents_deviation
+    assert_equal "+2", @lily_parser.cents_deviation(MM::Ratio.new(3, 2))
+    assert_equal "-14", @lily_parser.cents_deviation(MM::Ratio.new(5, 4))
+  end
+
+  def test_cents_of_unaltered
+    assert_equal 700.0, @lily_parser.cents_of_unaltered(MM::Ratio.new(3, 2))
+    assert_equal 400.0, @lily_parser.cents_of_unaltered(MM::Ratio.new(5, 4))
+  end
+
   def test_render
     @lily_parser.template = File.read("test/test_template.ly.erb")
     exp = "music = { a1*2/3 cDs'1*4/7 }\n"
