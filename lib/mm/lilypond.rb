@@ -1,5 +1,4 @@
 require 'mm'
-require 'pry'
 require 'erb'
 
 class MM::Lilypond
